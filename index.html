@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>90-Day Challenge Tracker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: #495057;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tracker-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        .tracker-table th,
+        .tracker-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .tracker-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .tracker-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .tracker-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .input-cell {
+            padding: 4px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            width: 60px;
+            text-align: center;
+        }
+
+        .checkbox-cell {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .progress-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .progress-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .progress-card h3 {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
+            font-size: 1.3em;
+        }
+
+        .habit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .habit-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .habit-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .completion-rate {
+            font-size: 2em;
+            font-weight: bold;
+            color: #28a745;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .workout-schedule {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .workout-day {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .workout-day h4 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .workout-type {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .export-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .export-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: #218838;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .instructions h4 {
+            margin: 0 0 15px 0;
+            color: #1976d2;
+        }
+
+        .instructions ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tracker-table {
+                font-size: 12px;
+            }
+            
+            .input-cell {
+                width: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+                    <div class="header">
+            <h1>90-Day Challenge Tracker</h1>
+            <p>September 17 - December 17, 2024 • Transform Your Life • Track Your Progress • Achieve Your Goals</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('daily')">Daily Tracker</button>
+            <button class="tab" onclick="showTab('nighttime')">Nighttime Checklist</button>
+            <button class="tab" onclick="showTab('progress')">Progress Dashboard</button>
+            <button class="tab" onclick="showTab('workout')">Workout Schedule</button>
+            <button class="tab" onclick="showTab('export')">Export & Setup</button>
+        </div>
+
+        <div id="daily" class="tab-content active">
+            <h2>Daily Habit Tracker</h2>
+            <p><strong>Challenge Period:</strong> September 17, 2024 - December 17, 2024 (90 Days)</p>
+            
+            <div class="instructions">
+                <h4>How to Use This Tracker:</h4>
+                <ul>
+                    <li>Check off completed habits by clicking the checkboxes</li>
+                    <li>Enter your daily weight, calories, protein, and water intake</li>
+                    <li>Mark progress photos as taken when uploaded</li>
+                    <li>Data automatically calculates completion rates and streaks</li>
+                </ul>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="tracker-table" id="dailyTracker">
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Date</th>
+                            <th>Weight (lbs)</th>
+                            <th>5AM Wake</th>
+                            <th>BJJ/Sprints</th>
+                            <th>Lifts</th>
+                            <th>Cold Shower</th>
+                            <th>Calories</th>
+                            <th>Protein (g)</th>
+                            <th>Water (gal)</th>
+                            <th>Friend/Family Call</th>
+                            <th>Progress Pic</th>
+                            <th>Daily Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dailyTrackerBody">
+                        <!-- Days will be generated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="nighttime" class="tab-content">
+            <h2>Nighttime Checklist</h2>
+            <p><strong>Evening Preparation:</strong> Set yourself up for tomorrow's success</p>
+            
+            <div class="instructions">
+                <h4>End Your Day Right:</h4>
+                <ul>
+                    <li><strong>Food Prep:</strong> Set yourself up for success tomorrow</li>
+                    <li><strong>Cleanliness:</strong> Create a clean, organized environment</li>
+                    <li><strong>Planning:</strong> Know exactly what you need to accomplish</li>
+                </ul>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table class="tracker-table" id="nighttimeTracker">
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Date</th>
+                            <th colspan="3">Food Prep</th>
+                            <th colspan="3">Cleanliness</th>
+                            <th>Planning</th>
+                            <th>Nighttime Score</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Chia Prep</th>
+                            <th>Salmon Prep</th>
+                            <th>6 Eggs</th>
+                            <th>Room Clean</th>
+                            <th>Dishes Done</th>
+                            <th>Brita Filled</th>
+                            <th>Plan Tasks</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="nighttimeTrackerBody">
+                        <!-- Days will be generated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-card">
+                    <h3>Nighttime Habit Breakdown</h3>
+                    <div class="habit-grid">
+                        <div class="habit-card">
+                            <div class="habit-title">Chia Prep</div>
+                            <div class="completion-rate" id="chiaRate">0%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="chiaFill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="habit-card">
+                            <div class="habit-title">Salmon Prep</div>
+                            <div class="completion-rate" id="salmonRate">0%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="salmonFill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="habit-card">
+                            <div class="habit-title">6 Eggs Prepped</div>
+                            <div class="completion-rate" id="eggsRate">0%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="eggsFill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="habit-card">
+                            <div class="habit-title">Room Clean</div>
+                            <div class="completion-rate" id="roomRate">0%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="roomFill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="habit-card">
+                            <div class="habit-title">Dishes Done</div>
+                            <div class="completion-rate" id="dishesRate">0%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="dishesFill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="habit-card">
+                            <div class="habit-title">Brita Filled</div>
+                            <div class="completion-rate" id="britaRate">0%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="britaFill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="habit-card">
+                            <div class="habit-title">Next Day Planned</div>
+                            <div class="completion-rate" id="planningRate">0%</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="planningFill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progress-card">
+                    <h3>Weekly Nighttime Performance</h3>
+                    <div id="nighttimeWeeklyStats">
+                        <p>Food Prep Completion: <span id="foodPrepWeekly">-</span>%</p>
+                        <p>Cleanliness Completion: <span id="cleanlinessWeekly">-</span>%</p>
+                        <p>Planning Completion: <span id="planningWeekly">-</span>%</p>
+                        <p>Overall Nighttime Score: <span id="nighttimeOverall">-</span>%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="progress" class="tab-content">
+            <h2>Progress Dashboard</h2>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-number" id="totalDays">0</div>
+                    <div class="stat-label">Days Completed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="overallScore">0%</div>
+                    <div class="stat-label">Overall Score</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="currentStreak">0</div>
+                    <div class="stat-label">Current Streak</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="bestStreak">0</div>
+                    <div class="stat-label">Best Streak</div>
+                </div>
+            </div>
+
+            <div class="habit-grid">
+                <div class="habit-card">
+                    <div class="habit-title">5AM Wake Up</div>
+                    <div class="completion-rate" id="wakeRate">0%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="wakeFill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="habit-card">
+                    <div class="habit-title">BJJ/Sprints</div>
+                    <div class="completion-rate" id="bjjRate">0%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="bjjFill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="habit-card">
+                    <div class="habit-title">Lifting</div>
+                    <div class="completion-rate" id="liftRate">0%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="liftFill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="habit-card">
+                    <div class="habit-title">Cold Shower</div>
+                    <div class="completion-rate" id="coldRate">0%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="coldFill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="habit-card">
+                    <div class="habit-title">Nutrition Goals</div>
+                    <div class="completion-rate" id="nutritionRate">0%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="nutritionFill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="habit-card">
+                    <div class="habit-title">Social Connection</div>
+                    <div class="completion-rate" id="socialRate">0%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="socialFill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-card">
+                    <h3>Weight Progress</h3>
+                    <div id="weightChart">
+                        <p>Enter daily weights to see your progress chart</p>
+                    </div>
+                </div>
+                <div class="progress-card">
+                    <h3>Weekly Averages</h3>
+                    <div id="weeklyStats">
+                        <p>Avg Calories: <span id="avgCalories">-</span></p>
+                        <p>Avg Protein: <span id="avgProtein">-</span>g</p>
+                        <p>Avg Water: <span id="avgWater">-</span> gal</p>
+                        <p>Habit Completion: <span id="avgCompletion">-</span>%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="workout" class="tab-content">
+            <h2>Workout Schedule</h2>
+            
+            <div class="workout-schedule">
+                <div class="workout-day">
+                    <h4>Sunday</h4>
+                    <div class="workout-type">Upper Body</div>
+                    <p>No BJJ - Rest Day</p>
+                </div>
+                <div class="workout-day">
+                    <h4>Monday</h4>
+                    <div class="workout-type">Lower Body</div>
+                    <p>BJJ + Cold Shower</p>
+                </div>
+                <div class="workout-day">
+                    <h4>Tuesday</h4>
+                    <div class="workout-type">Shoulders + Abs</div>
+                    <p>BJJ + Cold Shower</p>
+                </div>
+                <div class="workout-day">
+                    <h4>Wednesday</h4>
+                    <div class="workout-type">Pull Day</div>
+                    <p>BJJ + Cold Shower</p>
+                </div>
+                <div class="workout-day">
+                    <h4>Thursday</h4>
+                    <div class="workout-type">Lower Body</div>
+                    <p>BJJ + Cold Shower</p>
+                </div>
+                <div class="workout-day">
+                    <h4>Friday</h4>
+                    <div class="workout-type">Chest + Triceps</div>
+                    <p>BJJ + Cold Shower</p>
+                </div>
+                <div class="workout-day">
+                    <h4>Saturday</h4>
+                    <div class="workout-type">Rest Day - No Lifts</div>
+                    <p>BJJ + Cold Shower</p>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h4>Daily Goals:</h4>
+                <ul>
+                    <li><strong>5 AM Wake Up:</strong> No snooze button, period</li>
+                    <li><strong>BJJ:</strong> 6 days/week (Monday-Saturday), sprints if BJJ unavailable</li>
+                    <li><strong>Lifting:</strong> 6 days/week (Sunday-Friday)</li>
+                    <li><strong>Cold Shower:</strong> After every BJJ session</li>
+                    <li><strong>Nutrition:</strong> 3500+ calories, 200+ grams protein daily</li>
+                    <li><strong>Hydration:</strong> 3 gallons of water daily</li>
+                    <li><strong>Social:</strong> One meaningful call to friend or family daily</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="export" class="tab-content">
+            <h2>Export & Google Sheets Setup</h2>
+            
+            <div class="export-section">
+                <h3>Ready to Use This in Google Sheets?</h3>
+                <p>Click the button below to download your data as a CSV file, then upload it to Google Sheets for advanced tracking with formulas and charts.</p>
+                <button class="export-btn" onclick="exportToCSV()">Download CSV</button>
+                <button class="export-btn" onclick="exportFormulas()">Copy Formulas</button>
+            </div>
+
+            <div class="instructions">
+                <h4>Google Sheets Setup Instructions:</h4>
+                <ul>
+                    <li>Create a new Google Sheet</li>
+                    <li>Import the downloaded CSV file</li>
+                    <li>Copy the formulas provided below into appropriate cells</li>
+                    <li>Set up conditional formatting for better visualization</li>
+                    <li>Create charts for weight and habit tracking</li>
+                    <li>Share with accountability partners if desired</li>
+                </ul>
+            </div>
+
+            <div class="progress-card">
+                <h3>Suggested Google Sheets Formulas</h3>
+                <div style="text-align: left; font-family: monospace; background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                    <p><strong>Daily Score (Column M):</strong><br>
+                    =ROUND((D2+E2+F2+G2+IF(H2>=3500,1,0)+IF(I2>=200,1,0)+IF(J2>=3,1,0)+K2+L2)/9*100,1)</p>
+                    
+                    <p><strong>Weekly Average:</strong><br>
+                    =AVERAGE(M2:M8)</p>
+                    
+                    <p><strong>Completion Rate:</strong><br>
+                    =COUNTIF(D:D,1)/COUNTA(D:D)*100</p>
+                    
+                    <p><strong>Current Streak:</strong><br>
+                    Custom formula needed based on consecutive days</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data storage
+        let challengeData = JSON.parse(localStorage.getItem('challengeData')) || [];
+        
+        // Initialize the tracker
+        function initializeTracker() {
+            const tbody = document.getElementById('dailyTrackerBody');
+            const startDate = new Date('2024-09-17'); // September 17, 2024 as Day 1
+            
+            for (let i = 0; i < 90; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setDate(startDate.getDate() + i);
+                
+                const row = document.createElement('tr');
+                const dayOfWeek = currentDate.getDay(); // 0 = Sunday, 6 = Saturday
+                
+                // Determine if BJJ and Lifts should be scheduled
+                const bjjScheduled = dayOfWeek !== 0; // Every day except Sunday
+                const liftsScheduled = dayOfWeek !== 6; // Every day except Saturday
+                
+                row.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${currentDate.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' })}</td>
+                    <td><input type="number" class="input-cell" id="weight_${i}" onchange="updateData(${i}, 'weight', this.value)" step="0.1"></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="wake_${i}" onchange="updateData(${i}, 'wake', this.checked)"></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="bjj_${i}" onchange="updateData(${i}, 'bjj', this.checked)" ${!bjjScheduled ? 'disabled style="opacity:0.3"' : ''}></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="lifts_${i}" onchange="updateData(${i}, 'lifts', this.checked)" ${!liftsScheduled ? 'disabled style="opacity:0.3"' : ''}></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="cold_${i}" onchange="updateData(${i}, 'cold', this.checked)" ${!bjjScheduled ? 'disabled style="opacity:0.3"' : ''}></td>
+                    <td><input type="number" class="input-cell" id="calories_${i}" onchange="updateData(${i}, 'calories', this.value)"></td>
+                    <td><input type="number" class="input-cell" id="protein_${i}" onchange="updateData(${i}, 'protein', this.value)"></td>
+                    <td><input type="number" class="input-cell" id="water_${i}" onchange="updateData(${i}, 'water', this.value)" step="0.1"></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="social_${i}" onchange="updateData(${i}, 'social', this.checked)"></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="photo_${i}" onchange="updateData(${i}, 'photo', this.checked)"></td>
+                    <td id="score_${i}">0%</td>
+                `;
+                tbody.appendChild(row);
+                
+                // Initialize data for this day if it doesn't exist
+                if (!challengeData[i]) {
+                    challengeData[i] = {
+                        day: i + 1,
+                        date: currentDate.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }),
+                        weight: '',
+                        wake: false,
+                        bjj: false,
+                        lifts: false,
+                        cold: false,
+                        calories: '',
+                        protein: '',
+                        water: '',
+                        social: false,
+                        photo: false,
+                        chia: false,
+                        salmon: false,
+                        eggs: false,
+                        room: false,
+                        dishes: false,
+                        brita: false,
+                        planning: false,
+                        bjjScheduled,
+                        liftsScheduled
+                    };
+                }
+            }
+            
+            loadData();
+            updateProgress();
+            initializeNighttimeTracker();
+        }
+
+        function initializeNighttimeTracker() {
+            const tbody = document.getElementById('nighttimeTrackerBody');
+            const startDate = new Date('2024-09-17'); // September 17, 2024 as Day 1
+            
+            for (let i = 0; i < 90; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setDate(startDate.getDate() + i);
+                
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${currentDate.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' })}</td>
+                    <td><input type="checkbox" class="checkbox-cell" id="chia_night_${i}" onchange="updateData(${i}, 'chia', this.checked)"></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="salmon_night_${i}" onchange="updateData(${i}, 'salmon', this.checked)"></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="eggs_night_${i}" onchange="updateData(${i}, 'eggs', this.checked)"></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="room_night_${i}" onchange="updateData(${i}, 'room', this.checked)"></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="dishes_night_${i}" onchange="updateData(${i}, 'dishes', this.checked)"></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="brita_night_${i}" onchange="updateData(${i}, 'brita', this.checked)"></td>
+                    <td><input type="checkbox" class="checkbox-cell" id="planning_night_${i}" onchange="updateData(${i}, 'planning', this.checked)"></td>
+                    <td id="nighttime_score_${i}">0%</td>
+                `;
+                tbody.appendChild(row);
+            }
+            
+            loadNighttimeData();
+        }
+
+        function loadNighttimeData() {
+            challengeData.forEach((data, index) => {
+                document.getElementById(`chia_night_${index}`).checked = data.chia || false;
+                document.getElementById(`salmon_night_${index}`).checked = data.salmon || false;
+                document.getElementById(`eggs_night_${index}`).checked = data.eggs || false;
+                document.getElementById(`room_night_${index}`).checked = data.room || false;
+                document.getElementById(`dishes_night_${index}`).checked = data.dishes || false;
+                document.getElementById(`brita_night_${index}`).checked = data.brita || false;
+                document.getElementById(`planning_night_${index}`).checked = data.planning || false;
+                
+                updateNighttimeScore(index);
+            });
+        }
+
+        function updateNighttimeScore(day) {
+            const data = challengeData[day];
+            let score = 0;
+            let total = 7;
+
+            if (data.chia) score++;
+            if (data.salmon) score++;
+            if (data.eggs) score++;
+            if (data.room) score++;
+            if (data.dishes) score++;
+            if (data.brita) score++;
+            if (data.planning) score++;
+
+            const percentage = Math.round((score / total) * 100);
+            document.getElementById(`nighttime_score_${day}`).textContent = `${percentage}%`;
+            
+            return percentage;
+        }
+
+        function updateData(day, field, value) {
+            challengeData[day][field] = value;
+            localStorage.setItem('challengeData', JSON.stringify(challengeData));
+            updateDayScore(day);
+            updateNighttimeScore(day);
+            updateProgress();
+        }
+
+        function updateDayScore(day) {
+            const data = challengeData[day];
+            let score = 0;
+            let total = 0;
+
+            // Core habits (back to original 9)
+            if (data.wake) score++;
+            total++;
+
+            if (data.bjjScheduled) {
+                if (data.bjj) score++;
+                total++;
+            }
+
+            if (data.liftsScheduled) {
+                if (data.lifts) score++;
+                total++;
+            }
+
+            if (data.bjjScheduled) {
+                if (data.cold) score++;
+                total++;
+            }
+
+            if (data.calories >= 3500) score++;
+            total++;
+
+            if (data.protein >= 200) score++;
+            total++;
+
+            if (data.water >= 3) score++;
+            total++;
+
+            if (data.social) score++;
+            total++;
+
+            if (data.photo) score++;
+            total++;
+
+            const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
+            document.getElementById(`score_${day}`).textContent = `${percentage}%`;
+            
+            return percentage;
+        }
+
+        function loadData() {
+            challengeData.forEach((data, index) => {
+                if (data.weight) document.getElementById(`weight_${index}`).value = data.weight;
+                document.getElementById(`wake_${index}`).checked = data.wake;
+                if (data.bjjScheduled) document.getElementById(`bjj_${index}`).checked = data.bjj;
+                if (data.liftsScheduled) document.getElementById(`lifts_${index}`).checked = data.lifts;
+                if (data.bjjScheduled) document.getElementById(`cold_${index}`).checked = data.cold;
+                if (data.calories) document.getElementById(`calories_${index}`).value = data.calories;
+                if (data.protein) document.getElementById(`protein_${index}`).value = data.protein;
+                if (data.water) document.getElementById(`water_${index}`).value = data.water;
+                document.getElementById(`social_${index}`).checked = data.social;
+                document.getElementById(`photo_${index}`).checked = data.photo;
+                
+                updateDayScore(index);
+            });
+        }
+
+        function updateProgress() {
+            const completedDays = challengeData.filter(day => 
+                day.weight || day.wake || day.bjj || day.lifts || day.calories || day.protein
+            ).length;
+            
+            // Calculate completion rates
+            const wakeRate = Math.round((challengeData.filter(d => d.wake).length / challengeData.length) * 100);
+            const bjjRate = Math.round((challengeData.filter(d => d.bjj && d.bjjScheduled).length / challengeData.filter(d => d.bjjScheduled).length) * 100) || 0;
+            const liftRate = Math.round((challengeData.filter(d => d.lifts && d.liftsScheduled).length / challengeData.filter(d => d.liftsScheduled).length) * 100) || 0;
+            const coldRate = Math.round((challengeData.filter(d => d.cold && d.bjjScheduled).length / challengeData.filter(d => d.bjjScheduled).length) * 100) || 0;
+            const nutritionRate = Math.round((challengeData.filter(d => d.calories >= 3500 && d.protein >= 200 && d.water >= 3).length / challengeData.length) * 100);
+            const socialRate = Math.round((challengeData.filter(d => d.social).length / challengeData.length) * 100);
+            
+            // Nighttime checklist rates
+            const chiaRate = Math.round((challengeData.filter(d => d.chia).length / challengeData.length) * 100);
+            const salmonRate = Math.round((challengeData.filter(d => d.salmon).length / challengeData.length) * 100);
+            const eggsRate = Math.round((challengeData.filter(d => d.eggs).length / challengeData.length) * 100);
+            const roomRate = Math.round((challengeData.filter(d => d.room).length / challengeData.length) * 100);
+            const dishesRate = Math.round((challengeData.filter(d => d.dishes).length / challengeData.length) * 100);
+            const britaRate = Math.round((challengeData.filter(d => d.brita).length / challengeData.length) * 100);
+            const planningRate = Math.round((challengeData.filter(d => d.planning).length / challengeData.length) * 100);
+
+            // Update dashboard
+            document.getElementById('totalDays').textContent = completedDays;
+            document.getElementById('wakeRate').textContent = `${wakeRate}%`;
+            document.getElementById('bjjRate').textContent = `${bjjRate}%`;
+            document.getElementById('liftRate').textContent = `${liftRate}%`;
+            document.getElementById('coldRate').textContent = `${coldRate}%`;
+            document.getElementById('nutritionRate').textContent = `${nutritionRate}%`;
+            document.getElementById('socialRate').textContent = `${socialRate}%`;
+
+            // Update progress bars
+            document.getElementById('wakeFill').style.width = `${wakeRate}%`;
+            document.getElementById('bjjFill').style.width = `${bjjRate}%`;
+            document.getElementById('liftFill').style.width = `${liftRate}%`;
+            document.getElementById('coldFill').style.width = `${coldRate}%`;
+            document.getElementById('nutritionFill').style.width = `${nutritionRate}%`;
+            document.getElementById('socialFill').style.width = `${socialRate}%`;
+
+            // Update nighttime checklist rates
+            if (document.getElementById('chiaRate')) {
+                document.getElementById('chiaRate').textContent = `${chiaRate}%`;
+                document.getElementById('salmonRate').textContent = `${salmonRate}%`;
+                document.getElementById('eggsRate').textContent = `${eggsRate}%`;
+                document.getElementById('roomRate').textContent = `${roomRate}%`;
+                document.getElementById('dishesRate').textContent = `${dishesRate}%`;
+                document.getElementById('britaRate').textContent = `${britaRate}%`;
+                document.getElementById('planningRate').textContent = `${planningRate}%`;
+
+                document.getElementById('chiaFill').style.width = `${chiaRate}%`;
+                document.getElementById('salmonFill').style.width = `${salmonRate}%`;
+                document.getElementById('eggsFill').style.width = `${eggsRate}%`;
+                document.getElementById('roomFill').style.width = `${roomRate}%`;
+                document.getElementById('dishesFill').style.width = `${dishesRate}%`;
+                document.getElementById('britaFill').style.width = `${britaRate}%`;
+                document.getElementById('planningFill').style.width = `${planningRate}%`;
+
+                // Calculate weekly nighttime stats
+                const recentWeek = challengeData.slice(-7);
+                const foodPrepWeekly = Math.round(recentWeek.reduce((sum, d) => sum + ((d.chia ? 1 : 0) + (d.salmon ? 1 : 0) + (d.eggs ? 1 : 0))/3, 0) / 7 * 100);
+                const cleanlinessWeekly = Math.round(recentWeek.reduce((sum, d) => sum + ((d.room ? 1 : 0) + (d.dishes ? 1 : 0) + (d.brita ? 1 : 0))/3, 0) / 7 * 100);
+                const planningWeekly = Math.round(recentWeek.reduce((sum, d) => sum + (d.planning ? 1 : 0), 0) / 7 * 100);
+                const nighttimeOverall = Math.round((foodPrepWeekly + cleanlinessWeekly + planningWeekly) / 3);
+
+                document.getElementById('foodPrepWeekly').textContent = foodPrepWeekly || '-';
+                document.getElementById('cleanlinessWeekly').textContent = cleanlinessWeekly || '-';
+                document.getElementById('planningWeekly').textContent = planningWeekly || '-';
+                document.getElementById('nighttimeOverall').textContent = nighttimeOverall || '-';
+            }
+
+            // Calculate overall score (main habits only)
+            const allRates = [wakeRate, bjjRate, liftRate, coldRate, nutritionRate, socialRate];
+            const overallScore = Math.round(allRates.reduce((a, b) => a + b, 0) / allRates.length);
+            document.getElementById('overallScore').textContent = `${overallScore}%`;
+
+            // Calculate streaks (simplified)
+            let currentStreak = 0;
+            let bestStreak = 0;
+            let tempStreak = 0;
+
+            for (let i = challengeData.length - 1; i >= 0; i--) {
+                const dayScore = updateDayScore(i);
+                if (dayScore >= 80) { // 80% or higher counts as a good day
+                    tempStreak++;
+                    if (i === challengeData.length - 1 || currentStreak === 0) {
+                        currentStreak = tempStreak;
+                    }
+                } else {
+                    if (tempStreak > bestStreak) bestStreak = tempStreak;
+                    tempStreak = 0;
+                }
+            }
+
+            if (tempStreak > bestStreak) bestStreak = tempStreak;
+
+            document.getElementById('currentStreak').textContent = currentStreak;
+            document.getElementById('bestStreak').textContent = bestStreak;
+
+            // Update weekly averages
+            const recentWeek = challengeData.slice(-7);
+            const avgCalories = Math.round(recentWeek.reduce((sum, d) => sum + (parseFloat(d.calories) || 0), 0) / 7);
+            const avgProtein = Math.round(recentWeek.reduce((sum, d) => sum + (parseFloat(d.protein) || 0), 0) / 7);
+            const avgWater = (recentWeek.reduce((sum, d) => sum + (parseFloat(d.water) || 0), 0) / 7).toFixed(1);
+
+            document.getElementById('avgCalories').textContent = avgCalories || '-';
+            document.getElementById('avgProtein').textContent = avgProtein || '-';
+            document.getElementById('avgWater').textContent = avgWater || '-';
+            document.getElementById('avgCompletion').textContent = `${overallScore}%`;
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function exportToCSV() {
+            const headers = ['Day', 'Date', 'Weight', '5AM Wake', 'BJJ/Sprints', 'Lifts', 'Cold Shower', 'Calories', 'Protein', 'Water', 'Social Call', 'Progress Pic', 'Daily Score', 'Chia Prep', 'Salmon Prep', '6 Eggs', 'Room Clean', 'Dishes', 'Brita Filled', 'Plan Tasks', 'Nighttime Score'];
+            
+            let csvContent = headers.join(',') + '\n';
+            
+            challengeData.forEach((day, index) => {
+                const score = updateDayScore(index);
+                const nightScore = updateNighttimeScore(index);
+                const row = [
+                    day.day,
+                    `"${day.date}"`,
+                    day.weight || '',
+                    day.wake ? 1 : 0,
+                    day.bjj ? 1 : 0,
+                    day.lifts ? 1 : 0,
+                    day.cold ? 1 : 0,
+                    day.calories || '',
+                    day.protein || '',
+                    day.water || '',
+                    day.social ? 1 : 0,
+                    day.photo ? 1 : 0,
+                    `${score}%`,
+                    day.chia ? 1 : 0,
+                    day.salmon ? 1 : 0,
+                    day.eggs ? 1 : 0,
+                    day.room ? 1 : 0,
+                    day.dishes ? 1 : 0,
+                    day.brita ? 1 : 0,
+                    day.planning ? 1 : 0,
+                    `${nightScore}%`
+                ];
+                csvContent += row.join(',') + '\n';
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', '90-day-challenge-data.csv');
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function exportFormulas() {
+            const formulas = `
+Google Sheets Setup Instructions for 90-Day Challenge Tracker:
+
+DATES: September 17, 2024 - December 17, 2024 (90 Days)
+
+STEP 1: CHECKBOX SETUP
+For all Yes/No columns, convert to checkboxes:
+1. Select columns D, E, F, G, K, L (main tracker)
+2. Select columns N-T (nighttime tracker)  
+3. Go to Insert > Checkbox
+4. This converts 1/0 values to clickable checkboxes
+
+STEP 2: FORMULAS
+
+MAIN TRACKER (Daily Score - Column M):
+=ROUND((D2+E2+F2+G2+IF(H2>=3500,1,0)+IF(I2>=200,1,0)+IF(J2>=3,1,0)+K2+L2)/9*100,1)
+
+NIGHTTIME TRACKER (Nighttime Score - Column U):
+=ROUND((N2+O2+P2+Q2+R2+S2+T2)/7*100,1)
+
+COMPLETION RATES:
+- 5AM Wake Rate: =COUNTIF(D2:D91,TRUE)/90*100
+- BJJ Rate: =COUNTIF(E2:E91,TRUE)/COUNTIF(E2:E91,"<>")*100
+- Nutrition Rate: =SUMPRODUCT((H2:H91>=3500)*(I2:I91>=200)*(J2:J91>=3))/90*100
+
+WEEKLY AVERAGES:
+- Main habits (week 1): =AVERAGE(M2:M8)
+- Nighttime habits (week 1): =AVERAGE(U2:U8)
+
+STEP 3: CONDITIONAL FORMATTING
+Apply to Daily Score column (M2:M91):
+- Daily Score >= 90%: Green background
+- Daily Score 70-89%: Yellow background  
+- Daily Score < 70%: Red background
+
+STEP 4: VALIDATION
+Set data validation for numeric columns:
+- Weight (C): Number, 0-500
+- Calories (H): Number, 0-6000  
+- Protein (I): Number, 0-400
+- Water (J): Number, 0-5
+
+The tracker is now optimized for Google Sheets with proper checkboxes!
+            `;
+            
+            navigator.clipboard.writeText(formulas).then(() => {
+                alert('Formulas copied to clipboard! Paste them into a text document for reference.');
+            });
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', initializeTracker);
+    </script>
+</body>
+</html>
